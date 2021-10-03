@@ -1,0 +1,22 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+before install:
+  - docker build -t varvaradialog/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true varvaradialog/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-north-1"
+  app: "docker-react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-eu-north-1-527301380176"
+  bucker_path: "docker-react"
+  on: 
+    branch: master
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
